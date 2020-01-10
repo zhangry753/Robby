@@ -6,21 +6,13 @@ Vue.use(VueRouter)
 const routes = [
   {
       path: '/',
-      redirect: '/ad'
+      redirect: '/index'
   },
+  //-----------------------  页面路由  -----------------------------------------
   {
-    path: '/',
-    component: () => import('@/common/Home.vue'),
-    children: [
-      //-----------------------  页面路由  -----------------------------------------
-      {
-        path: '/ad',
-        name: 'ad',
-        meta: { title: '运营位列表' },
-        component: () => import('@/views/Ad.vue')
-      },
-
-    ]
+    path: '/index',
+    name: 'index',
+    component: () => import('@/views/Index.vue')
   },
   {
     path: '/about',

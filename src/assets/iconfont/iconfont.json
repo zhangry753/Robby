@@ -1,0 +1,23 @@
+{
+  "id": "1606792",
+  "name": "new 1",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "9654023",
+      "name": "robot-fill",
+      "font_class": "robot-fill",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "9654024",
+      "name": "robot",
+      "font_class": "robot",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    }
+  ]
+}

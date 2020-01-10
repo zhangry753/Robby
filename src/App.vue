@@ -1,14 +1,22 @@
 <template>
-  <div id="app">
-<!--    <div id="nav">-->
-<!--      <router-link to="/">Home</router-link> |-->
-<!--      <router-link to="/about">About</router-link>-->
-<!--    </div>-->
-    <router-view/>
-  </div>
+    <div id="app">
+        <Header></Header>
+        <router-view/>
+    </div>
 </template>
 
+<script>
+    import Header from './components/Header.vue'
+
+    export default {
+        name: 'app',
+        components: { Header, },
+    }
+</script>
+
 <style>
-  @import "./assets/css/main.css";
-  @import "./assets/css/theme-dark.css";
+    @import "./assets/css/main.css";
+    @import "./assets/css/theme-light.css";
+    @import "http://at.alicdn.com/t/font_1606792_vf5w11rhsuq.css";
+    /*@import "./assets/iconfont/iconfont.css";*/
 </style>
