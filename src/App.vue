@@ -19,4 +19,8 @@
     @import "./assets/css/theme-light.css";
     @import "http://at.alicdn.com/t/font_1606792_vf5w11rhsuq.css";
     /*@import "./assets/iconfont/iconfont.css";*/
+    #app{
+        width: 800px;
+        height: 600px;
+    }
 </style>

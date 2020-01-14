@@ -18,8 +18,9 @@ function createWindow () {
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true //注入node模块
     }
   })
 
@@ -35,6 +36,13 @@ function createWindow () {
 
   win.on('closed', () => {
     win = null
+  })
+
+  win.on('maximize', function () {
+    win.webContents.send('window-maxed')
+  })
+  win.on('unmaximize', function () {
+    win.webContents.send('window-unmaxed')
   })
 }
 
@@ -91,3 +99,19 @@ if (isDevelopment) {
     })
   }
 }
+
+// 接收最大化、最小化、关闭信号
+let ipcMain = require('electron').ipcMain;
+ipcMain.on('window-min', function() {
+    win.minimize();
+})
+ipcMain.on('window-max', function() {
+    if (win.isMaximized()) {
+        win.restore();
+    } else {
+        win.maximize();
+    }
+})
+ipcMain.on('window-close', function() {
+    win.close();
+})

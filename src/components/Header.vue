@@ -7,9 +7,9 @@
             </div>
             <div class="handler">
                 <el-button-group>
-                    <el-button size="mini" icon="el-icon-minus"></el-button>
-                    <el-button size="mini" icon="el-icon-full-screen"></el-button>
-                    <el-button size="mini" icon="el-icon-close"></el-button>
+                    <el-button size="mini" icon="el-icon-minus" @click="minimum"></el-button>
+                    <el-button size="mini" :icon="isMaximum? 'el-icon-copy-document': 'el-icon-full-screen'" @click="maximum"></el-button>
+                    <el-button size="mini" icon="el-icon-close" @click="close"></el-button>
                 </el-button-group>
             </div>
         </div>
@@ -33,27 +33,56 @@
     </div>
 </template>
 <script>
+    let ipcRenderer = {on:function () {}}
+    // import {ipcRenderer } from 'electron'
     import Navbar from './Navbar'
+
     export default {
         components: { Navbar, },
         data() {
             return {
                 name: '我的用户名',
+                isMaximum: false,
             }
         },
         computed:{
+        },
+        created() {
+            //获取最大化状态
+            ipcRenderer.on('window-maxed', (event) => {
+                this.isMaximum = true
+            })
+            ipcRenderer.on('window-unmaxed', (event) => {
+                this.isMaximum = false
+            })
         },
         methods: {
             // 用户名下拉菜单选择事件
             handleCommand (command) {
                 if (command == 'logout') {
-                    window.location = this.$url.logout;
+                    window.location = this.$url.logout
                 }
             },
+            //最小化
+            minimum() {
+                ipcRenderer.send('window-min')
+            },
+            //最大化
+            maximum() {
+                ipcRenderer.send('window-max')
+            },
+            //关闭窗口
+            close() {
+                ipcRenderer.send('window-close')
+            }
         },
     }
 </script>
 <style scoped>
+    .first-line {
+        -webkit-app-region: drag; /*可拖拽*/
+        -webkit-user-select: none; /*文本不可选择*/
+    }
     .first-line,.second-line {
         display: flex;
         justify-content : space-between;
@@ -76,6 +105,7 @@
         display: flex;
         justify-content: right;
         width: 132px;
+        -webkit-app-region: no-drag; /*取消拖拽区，否则无法点击*/
     }
 
     .header-user-con {

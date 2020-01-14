@@ -1,0 +1,12 @@
+[
+  {
+    "name": "通用",
+    "icon": "el-icon-star-off",
+    "key": "common"
+  },
+  {
+    "name": "测试",
+    "icon": "el-icon-info",
+    "key": "test"
+  }
+]

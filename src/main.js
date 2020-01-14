@@ -8,7 +8,7 @@ Vue.config.productionTip = false
 
 //const & url
 import const_ from "../config/const"
-import url from "../config/url"
+import url from "../config/urlLocal"
 Vue.prototype.$const = const_
 Vue.prototype.$url = url
 
