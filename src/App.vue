@@ -23,4 +23,7 @@
         width: 800px;
         height: 600px;
     }
+    body{
+        overflow: scroll;
+    }
 </style>

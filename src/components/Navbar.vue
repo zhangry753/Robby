@@ -40,20 +40,7 @@
                     {
                         icon: 'el-icon-menu',
                         index: 'index',
-                        title: '赛事列表'
-                    },
-                    {
-                        icon: 'el-icon-map-location',
-                        index: 'city',
-                        title: '分站列表'
-                    },
-                    { icon: 'el-icon-user',
-                        index: 'player',
-                        title: '球员列表'
-                    },
-                    { icon: 'el-icon-medal',
-                        index: 'team',
-                        title: '球队列表'
+                        title: '小工具中心'
                     },
                 ],
             }

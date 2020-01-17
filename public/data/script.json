@@ -1,10 +1,53 @@
-[
-  {
-    "name": "在线翻译",
-    "desc": "一个翻译软件",
-    "logo": "https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1992280436,1921667115&fm=26&gp=0.jpg",
-    "detail": "<h1>很好</h1><ul><li>1</li><li>2</li></ul>",
-    "tags": ["common"],
-    "script": "{\"signature\":\"robby\",\"code\":\"fklsdfewedf\"}"
-  }
-]
+{
+  "id": "aaa-bbb-1",
+  "name": "在线翻译",
+  "desc": "一个翻译软件",
+  "logo": "https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1992280436,1921667115&fm=26&gp=0.jpg",
+  "detail": "<h1>很好</h1><ul><li>1</li><li>2</li></ul>",
+  "tags": ["common"],
+  "create_time": "2020-01-17 10:00:00",
+  "update_time": "2020-01-17 10:00:00",
+  "script": "{\"signature\":\"robby\",\"code\":\"fklsdfewedf\"}",
+  "config": [
+    {
+      "name": "第一项",
+      "key": "one",
+      "vtype": "string",
+      "wtype": "select",
+      "placeholder": "选择",
+      "optionSet": {
+        "isRange": "0",
+        "options": [
+          {
+            "label": "A",
+            "value": "a"
+          },
+          {
+            "label": "B",
+            "value": "b"
+          }
+        ]
+      }
+    },
+    {
+      "name": "第二项",
+      "unit": "",
+      "vtype": "string",
+      "key": "two",
+      "wtype": "text",
+      "placeholder": "请输入",
+      "rule": [
+        {"regex": "/^\\d3$/", "errorMsg": "请输入3位数字"},
+        {"regex": "/^[11,22,33]$/", "errorMsg": "必须是11或22或33"}
+      ]
+    },
+    {
+      "name": "第三项",
+      "unit": "",
+      "vtype": "string",
+      "key": "three",
+      "wtype": "file",
+      "placeholder": "请选择文件"
+    }
+  ]
+}

@@ -17,9 +17,24 @@ export function formatDate(date, fmt) {
     }
     return fmt
 }
-
 function padLeftZero(str) {
     return ('00' + str).substr(str.length)
+}
+
+//控件滚动动画
+//传入dom控件，duration为毫秒
+export function scrollTo(element, to, duration) {
+    if (duration <= 10){
+        element.scrollTop = to;
+        return;
+    }
+    var difference = to - element.scrollTop;
+    var perTick = difference / duration * 10;
+    setTimeout(function() {
+        element.scrollTop = element.scrollTop + perTick;
+        if (element.scrollTop === to) return;
+        scrollTo(element, to, duration - 10);
+    }, 10);
 }
 
 //图片压缩
