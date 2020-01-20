@@ -68,17 +68,10 @@ app.on('activate', () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
-    // try {
-    //   await installVueDevtools()
-    // } catch (e) {
-    //   console.error('Vue Devtools failed to install:', e.toString())
-    // }
     let installExtension = require('electron-devtools-installer')
-    installExtension.default(installExtension.VUEJS_DEVTOOLS)
-      .then(() => {
+    installExtension.default(installExtension.VUEJS_DEVTOOLS).then(() => {
         console.log('vue-devtools ok')
-      })
-      .catch(err => {
+      }).catch(err => {
         console.log('Unable to install `vue-devtools`: \n', err)
       })
   }

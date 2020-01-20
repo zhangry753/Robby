@@ -42,6 +42,8 @@
 
 <script>
     import ConfigField from "@/components/widget/ConfigField"
+    import {runScript} from '../common/public'
+
     export default {
         name: 'ScriptDetail',
         components: {ConfigField},
@@ -72,6 +74,12 @@
                 this.isRunning = true
                 this.isFinish = false
                 setTimeout(()=>{
+                    let code = `
+                        const robot = exports.robot
+                        robot.typeString("Hello World");
+                        robot.keyTap("enter");
+                    `
+                    runScript(code)
                     this.isRunning = false
                     this.isFinish = true
                 }, 1000)

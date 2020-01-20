@@ -66,3 +66,18 @@ export function imageCompress(img, {maxWidth=1080, maxHeight=1080, quality=0.92,
         }
     })
 }
+
+
+const NativeModule = require('module')
+const vm = require('vm')
+const robot = require('robotjs')
+export function runScript (code, exports={}, thisObj={}) {
+    //转为function(exports, require, module, __filename, __dirname)
+    const wrapper = NativeModule.wrap(code)
+    const script = new vm.Script(wrapper)
+    //加载robotjs和alert提示
+    exports.robot = robot
+    let model = {exports: exports }
+    script.runInThisContext().call(thisObj, model.exports, null, model)
+    return model
+}

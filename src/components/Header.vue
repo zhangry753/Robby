@@ -33,8 +33,8 @@
     </div>
 </template>
 <script>
-    let ipcRenderer = {on:function () {}}
-    // import {ipcRenderer } from 'electron'
+    // let ipcRenderer = {on:function () {}}
+    import {ipcRenderer } from 'electron'
     import Navbar from './Navbar'
 
     export default {
