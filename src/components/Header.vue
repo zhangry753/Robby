@@ -16,18 +16,18 @@
 
         <div class="second-line">
             <navbar></navbar>
-            <div class="header-right">
-                <div class="header-user-con">
-                    <el-dropdown class="user-name" trigger="click" @command="handleCommand">
-                        <span class="el-dropdown-link">
-                            {{name}} <i class="el-icon-caret-bottom"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item divided  command="logout">退出登录</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-            </div>
+<!--            <div class="header-right">-->
+<!--                <div class="header-user-con">-->
+<!--                    <el-dropdown class="user-name" trigger="click" @command="handleCommand">-->
+<!--                        <span class="el-dropdown-link">-->
+<!--                            {{name}} <i class="el-icon-caret-bottom"></i>-->
+<!--                        </span>-->
+<!--                        <el-dropdown-menu slot="dropdown">-->
+<!--                            <el-dropdown-item divided  command="logout">退出登录</el-dropdown-item>-->
+<!--                        </el-dropdown-menu>-->
+<!--                    </el-dropdown>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
     </div>

@@ -18,22 +18,32 @@ const localStorePlugin = store => {
 export default new Vuex.Store({
   state: {
     config: {}, //{scriptId : {configKey: value} }
+    favor: [], //[scriptId]
   },
   mutations: {
-    setConfig(state, {id, config}) {
-      state.config[id] = config
+    setConfig(state, {scriptId, config}) {
+      state.config[scriptId] = config
+    },
+    changeFavor(state, {scriptId, isAdd}) {
+      (!state.favor) && (state.favor = [])
+      let index = state.favor.indexOf(scriptId)
+      if(isAdd && index<0) {
+        state.favor.push(scriptId)
+      } else if(!isAdd && index>=0) {
+        state.favor.splice(index, 1)
+      }
     },
   },
   actions: {
   },
   getters: {
     getConfig(state) {
-      return id => {
-        return state.config[id] ? state.config[id] : {}
+      return scriptId => {
+        return state.config[scriptId] ? state.config[scriptId] : {}
       }
     },
   },
   modules: {
   },
-  // plugins: [localStorePlugin]
+  plugins: [localStorePlugin]
 })

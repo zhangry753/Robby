@@ -42,6 +42,11 @@
                         index: 'index',
                         title: '小工具中心'
                     },
+                    {
+                        icon: 'el-icon-star-on',
+                        index: 'favor',
+                        title: '收藏夹'
+                    },
                 ],
             }
         },

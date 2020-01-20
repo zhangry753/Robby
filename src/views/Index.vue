@@ -31,8 +31,10 @@
                             <div class="script-title">{{script.name}}</div>
                             <div class="script-desc">{{script.desc}}</div>
                         </div>
-                        <i class="script-fav el-icon-star-on"></i>
-    <!--                <i class="script-fav el-icon-star-off"></i>-->
+                        <i v-if="$store.state.favor && $store.state.favor.indexOf(script.id) >= 0"
+                           class="script-fav el-icon-star-on" @click.stop="unfavor(script.id)"></i>
+                        <i v-else
+                           class="script-fav el-icon-star-off" @click.stop="favor(script.id)"></i>
                     </div>
                 </el-col>
             </el-row>
@@ -40,7 +42,7 @@
     </div>
 
     <!-- 详情侧拉框 -->
-    <el-drawer title="详情" :visible.sync="detailVisible" direction="rtl" size="80%">
+    <el-drawer title="详情" :visible.sync="detailVisible" direction="rtl" size="80%" destroy-on-close>
         <script-detail :script="script"></script-detail>
     </el-drawer>
 
@@ -117,6 +119,18 @@
                 let tagEl = this.$refs['tag_'+tag][0]
                 let contentEl = this.$refs['content']
                 scrollTo(contentEl, tagEl.offsetTop - contentEl.offsetTop, 300)
+            },
+            favor(id) {
+                this.$store.commit("changeFavor", {
+                    scriptId: id,
+                    isAdd: true,
+                })
+            },
+            unfavor(id) {
+                this.$store.commit("changeFavor", {
+                    scriptId: id,
+                    isAdd: false,
+                })
             }
 
         }

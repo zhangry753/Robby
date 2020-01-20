@@ -14,7 +14,10 @@
             <hr style="margin: 7px 0"/>
             <p class="script-desc">{{data.desc}}</p>
         </div>
-        <i class="script-fav el-icon-star-on"></i>
+        <i v-if="$store.state.favor && $store.state.favor.indexOf(script.id) >= 0"
+           class="script-fav el-icon-star-on" @click.stop="unfavor(script.id)"></i>
+        <i v-else
+           class="script-fav el-icon-star-off" @click.stop="favor(script.id)"></i>
     </div>
 
     <el-tabs v-model="tabName">
@@ -76,21 +79,40 @@
             stop() {
                 this.isRunning = false
             },
+            loadConfig() {
+                this.configForm = this.$store.getters.getConfig(this.script.id)
+            },
+            saveConfig() {
+                this.$store.commit("setConfig", {
+                    scriptId: this.script.id,
+                    config: this.configForm
+                })
+            },
+            favor(id) {
+                this.$store.commit("changeFavor", {
+                    scriptId: id,
+                    isAdd: true,
+                })
+            },
+            unfavor(id) {
+                this.$store.commit("changeFavor", {
+                    scriptId: id,
+                    isAdd: false,
+                })
+            }
         },
         watch: {
             script() {
-                this.configForm = this.$store.getters.getConfig(this.script.id)
+                this.loadConfig()
             }
         },
         created () {
-            setInterval(()=>{
-                // this.$store.commit("setConfig", this.script.id, this.configForm)
-                this.$store.commit("setConfig", {
-                    id: this.script.id,
-                    config: this.configForm
-                })
-            }, 5000)
+            this.loadConfig()
+        },
+        destroyed () {
+            this.saveConfig()
         }
+
     }
 </script>
 
@@ -124,6 +146,9 @@
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;
+    }
+    .script-fav {
+        cursor: pointer;
     }
     .script-fav.el-icon-star-on {
         font-size: 24px;

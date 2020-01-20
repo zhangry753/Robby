@@ -63,7 +63,6 @@
                     if(!res.canceled) {
                         this.valueNative = res.filePaths[0].replace(/\\/g, "/")
                         let fileName = this.valueNative.substring(this.valueNative.lastIndexOf('/') + 1)
-                        console.log(this.valueNative)
                         this.filePathLabel = this.valueNative.length<=20
                           ? this.valueNative
                           : this.valueNative.substring(0, 20) + '.../' + fileName
