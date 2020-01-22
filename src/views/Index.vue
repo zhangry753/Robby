@@ -209,4 +209,7 @@
     .el-drawer__header > span:focus{
         outline: 0 !important;
     }
+    .el-drawer__body{
+        height: 0;
+    }
 </style>
