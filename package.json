@@ -17,6 +17,7 @@
     "core-js": "^3.4.4",
     "element-ui": "^2.13.0",
     "iohook": "^0.6.4",
+    "node-xlsx": "^0.15.0",
     "robotjs": "^0.6.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",

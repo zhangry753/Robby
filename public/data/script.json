@@ -8,7 +8,7 @@
   "create_time": "2020-01-17 10:00:00",
   "update_time": "2020-01-17 10:00:00",
   "script": "{\"signature\":\"robby\",\"code\":\"fklsdfewedf\"}",
-  "config": [
+  "configField": [
     {
       "name": "第一项",
       "key": "one",
@@ -42,10 +42,10 @@
       ]
     },
     {
-      "name": "第三项",
+      "name": "文件",
       "unit": "",
       "vtype": "string",
-      "key": "three",
+      "key": "filepath",
       "wtype": "file",
       "placeholder": "请选择文件"
     }

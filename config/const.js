@@ -15,5 +15,11 @@ const const_ = {
         "textarea": "文本域",
         "file": "文件",
     },
+    //脚本退出时的错误代码
+    scriptExitCode: {
+        '0': '执行成功',
+        '1': '已停止',
+        '-1': '错误',
+    }
 };
 export default const_;

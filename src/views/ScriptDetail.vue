@@ -27,7 +27,7 @@
     <el-tabs v-model="tabName">
         <el-tab-pane label="配置选项" name="config">
             <el-form ref="rowInfo" :model="configForm" label-width="140px">
-                <el-form-item v-for="item of data.config" :label="item.name">
+                <el-form-item v-for="item of data.configField" :label="item.name">
                     <config-field v-model="configForm[item.key]" :data="item"></config-field>
                 </el-form-item>
             </el-form>
@@ -50,6 +50,7 @@
 
 <script>
     import ConfigField from "@/components/widget/ConfigField"
+    import {ipcRenderer} from 'electron'
     import {runScript} from '@/plugins/scriptRunner'
 
     export default {
@@ -81,28 +82,37 @@
             start() {
                 this.isRunning = true
                 this.isFinish = false
-                setTimeout(()=>{
-                    let code = `
-                        // robot.typeString("Hello World");
-                        // robot.keyTap("enter");
-                        setTimeout(()=>{
-                            alert(1)
-                            console.log(1)
-                        }, 1000)
-                        // reject('执行成功了没')
-                    `
-                    runScript('111', code).then(res => {
-                        this.$alert('执行完毕', "提示", {type: 'success'})
-                        this.isRunning = false
-                        this.isFinish = true
-                    }).catch(res => {
-                        this.$alert(`执行失败：${res}`, "错误", {type: 'error'})
-                        this.isRunning = false
+                setTimeout(() => {
+                    ipcRenderer.send('script-run', this.data.id, this.data.script, {
+                        config: this.configForm
                     })
                 }, 1000)
+
             },
             stop() {
                 this.isRunning = false
+                ipcRenderer.send('script-stop', this.data.id)
+            },
+            registerScriptHandler() {
+                ipcRenderer.on('script-data', (event, res) => {
+                    ipcRenderer.send('window-focus')
+                    if(res.code === 0) {
+                        this.isRunning = false
+                        this.isFinish = true
+                        this.$alert('执行完毕', "提示", {type: 'success'})
+                    } else if(res.code === 1) {
+                        this.isRunning = false
+                    } else if(res.code) {
+                        this.isRunning = false
+                        let msg = res.msg ? res.msg: ''
+                        if (!msg && res.code in this.$const.scriptExitCode) {
+                            msg = this.$const.scriptExitCode[res.code]
+                        }
+                        this.$alert(`执行错误：${msg}`, "错误", {type: 'error'})
+                    }  else {
+                        this.$alert(res.data)
+                    }
+                })
             },
             loadConfig() {
                 this.configForm = this.$store.getters.getConfig(this.script.id)
@@ -133,6 +143,7 @@
         },
         created () {
             this.loadConfig()
+            this.registerScriptHandler()
         },
         destroyed () {
             this.saveConfig()

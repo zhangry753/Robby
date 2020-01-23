@@ -1,5 +1,3 @@
-const vm = require('vm')
-
 // export function runScript (code, {config={}, exports={}, thisObj={}}={}) {
 //     const wrapper = `
 //         (function(config, exports={}) {
@@ -29,12 +27,14 @@ const vm = require('vm')
 const scriptMap = {
     //id: worker
 }
-export function runScript (id, code, {config={}, exports={}, msgHandler=(data)=>{}}={}) {
+export function runScript (id, script, {config={}, exports={}, msgHandler=(data)=>{}}={}) {
+    let code = getScriptCode(script)
     const wrapper = `
         const {workerData, parentPort} = require('worker_threads')
         const robot = require('robotjs')
-        const ioHook = require('iohook')
-        const require = null
+        // const ioHook = require('iohook')
+        const excel = require('node-xlsx')
+        const { clipboard } = require('electron')
         const config = workerData.config
         const exports = workerData.exports
         const $message = (data) => {
@@ -43,37 +43,48 @@ export function runScript (id, code, {config={}, exports={}, msgHandler=(data)=>
         const $reject = (data) => {
             throw data
         }
+        const $typeString = (str) => {
+            clipboard.writeText(str, 'selection')
+            robot.keyTap("v", "control")
+        }
         ${code}
     `
-    const worker = new Worker("../", {
+    const Worker = require('worker_threads').Worker
+    const worker = new Worker(wrapper, {
         eval: true,
+        workerData: {config, exports}
     })
-    // const worker = new Worker(wrapper, {
-    //     eval: true,
-    //     workerData: {config, exports}
-    // })
     if(id in scriptMap) {
        scriptMap[id].terminate()
     }
     scriptMap[id] = worker
     return new Promise((resolve, reject) => {
-        worker.on('message', msgHandler)
+        worker.on('message', (data) => {
+            msgHandler({
+                id: id,
+                data: data,
+            })
+        })
         worker.on('error', (err) => {
             reject({
                 code: -1,
-                data: err,
+                id: id,
+                msg: err.message? err.message: err,
             })
         })
         worker.on('close', (err, result) => {
-            resolve('close')
         })
         worker.on('exit', (exitCode) => {
             if (exitCode === 0) {
-                resolve('succ')
+                resolve({
+                    code: 0,
+                    id: id,
+                    msg: '执行完毕'
+                })
             }
             reject({
                 code: exitCode,
-                data: {},
+                id: id,
             })
         })
     })
@@ -85,6 +96,26 @@ export function stopScript (id) {
     }
 }
 
+function getScriptCode(script) {
+    //todo 解密 | JSON.parse | 验证signature
+    //return script.code
+    return `
+        try {
+            var sheets = excel.parse(config.filepath)
+        } catch (err) {
+            throw '打开excel失败'
+        }
+        for(let sheet of sheets) {
+            for(let row of sheet['data']) {
+                for(let cell of row) {
+                    $typeString(cell)
+                    robot.keyTap("tab")
+                }
+                robot.keyTap("enter")
+            }
+        }
+    `
+}
 
 
 // const {Worker} = require('worker_threads')
