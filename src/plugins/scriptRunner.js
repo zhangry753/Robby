@@ -29,30 +29,10 @@ const scriptMap = {
 }
 export function runScript (id, script, {config={}, exports={}, msgHandler=(data)=>{}}={}) {
     let code = getScriptCode(script)
-    const wrapper = `
-        const {workerData, parentPort} = require('worker_threads')
-        const robot = require('robotjs')
-        // const ioHook = require('iohook')
-        const excel = require('node-xlsx')
-        const { clipboard } = require('electron')
-        const config = workerData.config
-        const exports = workerData.exports
-        const $message = (data) => {
-            parentPort.postMessage(data)
-        }
-        const $reject = (data) => {
-            throw data
-        }
-        const $typeString = (str) => {
-            clipboard.writeText(str, 'selection')
-            robot.keyTap("v", "control")
-        }
-        ${code}
-    `
     const Worker = require('worker_threads').Worker
     const worker = new Worker(wrapper, {
         eval: true,
-        workerData: {config, exports}
+        workerData: {config, exports, code}
     })
     if(id in scriptMap) {
        scriptMap[id].terminate()
@@ -96,45 +76,78 @@ export function stopScript (id) {
     }
 }
 
+export function sendMsg (id, value) {
+    if(id in scriptMap) {
+       scriptMap[id].postMessage(value)
+    }
+
+}
+
 function getScriptCode(script) {
     //todo 解密 | JSON.parse | 验证signature
     //return script.code
     return `
-        try {
-            var sheets = excel.parse(config.filepath)
-        } catch (err) {
-            throw '打开excel失败'
-        }
-        for(let sheet of sheets) {
-            for(let row of sheet['data']) {
-                for(let cell of row) {
-                    $typeString(cell)
-                    robot.keyTap("tab")
-                }
-                robot.keyTap("enter")
-            }
-        }
+        $on('message', value=>{
+            $message(value)
+        })
+        setTimeout(()=>{
+            process.exit(0)
+        }, 2000)
+        // try {
+        //     var sheets = excel.parse(config.filepath)
+        //     for(let sheet of sheets) {
+        //         for(let row of sheet['data']) {
+        //             for(let cell of row) {
+        //                 $typeString(cell)
+        //                 robot.keyTap("tab")
+        //             }
+        //             robot.keyTap("enter")
+        //         }
+        //     }
+        // } catch (err) {
+        //     console.log(err)
+        //     throw err
+        // }
     `
 }
 
+const wrapper = `
+    //加载模块
+    const vm = require('vm')
+    const {workerData, parentPort} = require('worker_threads')
+    const clipboardy = require('clipboardy')
+    const robot = require('robotjs')
+    // const ioHook = require('iohook')
+    const excel = require('node-xlsx')
 
-// const {Worker} = require('worker_threads')
-// runScript('111',`
-//     setTimeout(()=>{
-//         process.exit(12)
-//     }, 1000)
-//     $message({a: 1, b:'12'})
-// `, {
-//     msgHandler(data){
-//         console.log(data)
-//     }
-// }).then(res => {
-//     console.log(`成功：${res}`)
-// }).catch(res => {
-//     console.log(`出错`)
-//     console.log(res)
-// })
+    //创建context
+    const context = Object.assign(global, {
+        robot: robot,
+        // ioHook: ioHook,
+        excel: excel,
+        clipboardy: clipboardy,
+        //接收config和exports
+        config: workerData.config,
+        ext: workerData.exports,
+        //传递消息函数
+        $message(data) {
+            parentPort.postMessage(data)
+        },
+        //处理消息函数
+        $on(event, func) {
+            parentPort.on(event, func)
+        },
+        //抛出错误函数
+        $reject(data) {
+            throw data
+        },
+        //打字函数，支持中文
+        $typeString(str) {
+            clipboardy.writeSync(str.toString())
+            robot.keyTap("v", "control")
+        },
+    })
 
-// stopScript('111').then(code => {
-//     console.log(code)
-// })
+    //执行code
+    vm.runInNewContext(workerData.code, context)
+`
