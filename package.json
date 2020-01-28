@@ -9,11 +9,12 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "rebuild": "npm rebuild robotjs iohook --runtime=electron --target=6.0.12 --disturl=https://atom.io/download/atom-shell --abi=72"
+    "rebuild": "npm rebuild robotjs --runtime=electron --target=6.0.12 --disturl=https://atom.io/download/atom-shell --abi=72"
   },
   "main": "background.js",
   "dependencies": {
     "axios": "^0.19.1",
+    "clipboardy": "file:./src/plugins/clipboardy",
     "core-js": "^3.4.4",
     "element-ui": "^2.13.0",
     "iohook": "^0.6.4",

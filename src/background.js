@@ -118,12 +118,12 @@ ipcMain.on('window-focus', function () {
 })
 
 // 接收执行脚本指令
-import { runScript, stopScript } from '@/plugins/scriptRunner'
+import { runScript, stopScript, sendMsg } from '@/plugins/scriptRunner'
 ipcMain.on('script-run', function (event, id, script, {config={}, exports={}}={}) {
     runScript(id, script, {
         config: config,
         exports: exports,
-        msgHandler(data) {
+        msgHandler (data) {
             win.webContents.send('script-data', data)
         }
     }).then(res => {
@@ -131,6 +131,7 @@ ipcMain.on('script-run', function (event, id, script, {config={}, exports={}}={}
     }).catch(res => {
         win.webContents.send('script-data', res)
     })
+    setTimeout(()=>{sendMsg(id, 'yeh~')}, 1000)
 })
 // 接收停止脚本指令
 ipcMain.on('script-stop', function (e, id) {
